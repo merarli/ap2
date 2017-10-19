@@ -26,7 +26,7 @@ public class Kadai02_2 {
         double countY = 0;
         double totalY = 0;
 
-        List<Cat> tlist = new ArrayList<>();
+//        List<Cat> tlist = new ArrayList<>();
 
         try {
             BufferedReader br = new BufferedReader(
