@@ -16,7 +16,6 @@ import java.sql.Statement;
  * @author merarli
  */
 public class Ex43 extends javax.swing.JFrame {
-
     /**
      * Creates new form Ex43
      */
@@ -116,10 +115,10 @@ public class Ex43 extends javax.swing.JFrame {
             //SQLを実行してResultSetの形式で結果を取得
             ResultSet rs = stmt.executeQuery(sql);
             
+            
             jTextArea1.setText("");
             //取得したレコードを一つずつ処理
             while (rs.next()) {
-                
                 String result = "";
                 result += rs.getInt("student_id") + ":";
                 result += rs.getString("fullname");

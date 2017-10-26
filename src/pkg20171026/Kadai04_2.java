@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pkg20171024;
+package pkg20171026;
 
+import pkg20171024.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,12 +16,11 @@ import java.sql.Statement;
  *
  * @author merarli
  */
-public class Ex44 extends javax.swing.JFrame {
-
+public class Kadai04_2 extends javax.swing.JFrame {
     /**
      * Creates new form Ex43
      */
-    public Ex44() {
+    public Kadai04_2() {
         initComponents();
     }
 
@@ -42,7 +41,7 @@ public class Ex44 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("学年");
+        jLabel1.setText("学部");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,48 +98,41 @@ public class Ex44 extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
-        try {
+        
+                try {
             //meiboデータベースへの接続
             String driverUrl = "jdbc:derby://localhost:1527/meibo";
 
             //コネクションの確立
             Connection con
-                    = DriverManager.getConnection(driverUrl, "db", "db");
-           
-
-            //実行するSQL文を記述
-            String sql = "select * from T_STUDENT where grade=?";
+                    = DriverManager.getConnection(driverUrl,"db","db");
 
             //ステートメントの作成
-            PreparedStatement ps = con.prepareStatement(sql);
-//            Prep stmt = con.createStatement();
+            Statement stmt = con.createStatement();
 
-            try {
-                ps.setInt(1, Integer.parseInt(jTextField1.getText()));
-            } catch (SQLException ex) {
-                jTextArea1.setText(ex.getMessage());
-                jTextArea1.setText("残念");
-                ex.printStackTrace();
-                
-            }
+            //実行するSQL文を記述
+            String sql = "select * from T_STUDENT where GAKUBU_ID = "+jTextField1.getText();
 
             //SQLを実行してResultSetの形式で結果を取得
-            ResultSet rs = ps.executeQuery();
-
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            
             jTextArea1.setText("");
             //取得したレコードを一つずつ処理
             while (rs.next()) {
-
                 String result = "";
-                result += rs.getInt("student_id") + ":";
-                result += rs.getString("fullname");
+                result += rs.getInt("student_id") + ",";
+                result += rs.getString("fullname")+ ",";
+                result += rs.getString("gakubu_id") + ",";
+                result += rs.getString("grade") + ",";
+                result += rs.getString("score") ;
+                
                 jTextArea1.append(result + "\n");
-
+                
             }
             //メモリの開放
             rs.close();
-            ps.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -164,13 +156,13 @@ public class Ex44 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -178,7 +170,7 @@ public class Ex44 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Ex44().setVisible(true);
+                new Kadai04_2().setVisible(true);
             }
         });
     }

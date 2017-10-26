@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pkg20171024;
+package pkg20171026;
 
+import pkg20171024.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,12 +16,11 @@ import java.sql.Statement;
  *
  * @author merarli
  */
-public class Ex44 extends javax.swing.JFrame {
-
+public class Kadai04_3 extends javax.swing.JFrame {
     /**
      * Creates new form Ex43
      */
-    public Ex44() {
+    public Kadai04_3() {
         initComponents();
     }
 
@@ -34,21 +33,11 @@ public class Ex44 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("学年");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
 
         jButton1.setText("検索");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -67,24 +56,18 @@ public class Ex44 extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)))
+                        .addGap(159, 159, 159)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                .addComponent(jButton1)
                 .addGap(32, 32, 32)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(86, Short.MAX_VALUE))
@@ -93,54 +76,45 @@ public class Ex44 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
-        try {
+        
+                try {
             //meiboデータベースへの接続
             String driverUrl = "jdbc:derby://localhost:1527/meibo";
 
             //コネクションの確立
             Connection con
-                    = DriverManager.getConnection(driverUrl, "db", "db");
-           
-
-            //実行するSQL文を記述
-            String sql = "select * from T_STUDENT where grade=?";
+                    = DriverManager.getConnection(driverUrl,"db","db");
 
             //ステートメントの作成
-            PreparedStatement ps = con.prepareStatement(sql);
-//            Prep stmt = con.createStatement();
+            Statement stmt = con.createStatement();
 
-            try {
-                ps.setInt(1, Integer.parseInt(jTextField1.getText()));
-            } catch (SQLException ex) {
-                jTextArea1.setText(ex.getMessage());
-                jTextArea1.setText("残念");
-                ex.printStackTrace();
-                
-            }
+            //実行するSQL文を記述
+            String sql = "select min(score) as G_MIN, avg(score) as G_AVG, max(score) as G_MAX from T_STUDENT group by gakubu_id";
 
             //SQLを実行してResultSetの形式で結果を取得
-            ResultSet rs = ps.executeQuery();
-
+            ResultSet rs = stmt.executeQuery(sql);
+            
             jTextArea1.setText("");
+            int count = 1;
+            jTextArea1.append("学部ID；最低点,平均点,最高点"+ "\n");
+            
             //取得したレコードを一つずつ処理
             while (rs.next()) {
-
                 String result = "";
-                result += rs.getInt("student_id") + ":";
-                result += rs.getString("fullname");
+                result += (count) + ":";
+                result += rs.getInt("g_min")+ ",";
+                result += rs.getInt("g_avg") + ",";
+                result += rs.getInt("g_max") + ",";
+                
                 jTextArea1.append(result + "\n");
-
+                count++;
+                
             }
             //メモリの開放
             rs.close();
-            ps.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -164,30 +138,30 @@ public class Ex44 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_3.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_3.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_3.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Ex44.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Kadai04_3.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Ex44().setVisible(true);
+                new Kadai04_3().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
